@@ -4,6 +4,7 @@
 watch := node_modules/.bin/watch
 tsc := node_modules/.bin/tsc
 nodesass := node_modules/.bin/node-sass
+postbuild := node_modules/.bin/postbuild
 
 # Typescript source files & js transpiled files
 src_ts_files := $(shell find src/ts -name '*.ts')
@@ -39,7 +40,7 @@ dest/css/%.css: src/scss/%.scss
 
 dest/%.html: src/%.html
 	@mkdir -p $(dir $@)
-	cp $< $@
+	$(postbuild) -i $< -o $@ -g dest -c dest/css -j dest/js
 
 install:
 ifndef NPM
