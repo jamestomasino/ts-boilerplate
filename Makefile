@@ -22,6 +22,8 @@ dest_html_files := $(patsubst src/%,dest/%,$(src_html_files))
 NPM := $(shell command -v npm 2> /dev/null)
 YARN := $(shell command -v yarn 2> /dev/null)
 
+mkdir = @mkdir -p $(dir $@)
+
 all: node_modules $(dest_js_files) $(dest_css_files) $(dest_html_files)
 
 clean:
@@ -31,15 +33,15 @@ watch:
 	$(watch) make src/
 
 dest/js/%.js: src/ts/%.ts
-	@mkdir -p $(dir $@)
+	$(mkdir)
 	$(tsc) $< --out $@
 
 dest/css/%.css: src/scss/%.scss
-	@mkdir -p $(dir $@)
+	$(mkdir)
 	$(nodesass) $< $@
 
 dest/%.html: src/%.html
-	@mkdir -p $(dir $@)
+	$(mkdir)
 	$(postbuild) -i $< -o $@ -g dest -c dest/css -j dest/js
 
 install:
