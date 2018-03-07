@@ -1,9 +1,12 @@
 {
+  "name": "ts-boilerplate",
+  "version": "5.12.4",
+  "license": "GPL-3.0",
   "dependencies": {
     "node-sass": "^4.7.2",
     "postbuild": "^2.1.0",
     "typescript": "^2.7.2",
-    "watch": "^1.0.2",
+    "watchthis": "^0.3.0",
     "yarn": "^1.5.1"
   }
 }
