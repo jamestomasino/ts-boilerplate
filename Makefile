@@ -23,7 +23,7 @@ SRC_TS_FILES != find $(SRC_DIR)/ts -name '*.ts'
 DST_JS_FILES := $(SRC_TS_FILES:$(SRC_DIR)/ts/%.ts=$(DST_DIR)/js/%.js)
 
 # Sass source files & css transpiled files
-SRC_SASS_FILES != find src/scss/ -regex '[^_]*.scss'
+SRC_SASS_FILES != find $(SRC_DIR)/scss/ -regex '[^_]*.scss'
 DST_CSS_FILES := $(SRC_SASS_FILES:$(SRC_DIR)/scss/%.scss=$(DST_DIR)/css/%.css)
 
 # HTML files & injected HTML
@@ -48,15 +48,15 @@ clean:
 watch:
 	$(shell $(watch) -a ./$(SRC_DIR) make)
 
-$(DST_DIR)/js/%.js: src/ts/%.ts
+$(DST_DIR)/js/%.js: $(SRC_DIR)/ts/%.ts
 	$(mkdir)
 	$(tsc) $< --out $@
 
-$(DST_DIR)/css/%.css: src/scss/%.scss
+$(DST_DIR)/css/%.css: $(SRC_DIR)/scss/%.scss
 	$(mkdir)
 	$(nodesass) $< $@
 
-$(DST_DIR)/%.html: src/%.html
+$(DST_DIR)/%.html: $(SRC_DIR)/%.html
 	$(mkdir)
 	$(postbuild) -i $< -o $@ -g $(DST_DIR) -c $(DST_DIR)/css -j $(DST_DIR)/js
 
