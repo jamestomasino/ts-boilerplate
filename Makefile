@@ -56,3 +56,4 @@ endif
 
 node_modules: package.json yarn.lock
 	yarn install
+	touch node_modules # fixes watch bug if you manually ran yarn
