@@ -19,8 +19,8 @@ src_html_files != find src -name '*.html'
 dest_html_files := $(patsubst src/%,dest/%,$(src_html_files))
 
 # Dependency checks
-NPM := $(shell command -v npm 2> /dev/null)
-YARN := $(shell command -v yarn 2> /dev/null)
+NPM != command -v npm 2> /dev/null
+YARN != command -v yarn 2> /dev/null
 
 # Macros
 copy = cp $< $@
