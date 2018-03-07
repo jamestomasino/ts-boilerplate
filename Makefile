@@ -32,7 +32,7 @@ clean:
 	rm -rf dest
 
 watch:
-	$(shell $(watch) -a ./src make -s)
+	$(shell $(watch) -a ./src make)
 
 dest/js/%.js: src/ts/%.ts
 	$(mkdir)
