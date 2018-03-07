@@ -3,7 +3,7 @@ CFLAGS ?= -std=gnu99 -g $(WARNINGS)
 
 # Overridable Config
 SRC_DIR ?= src
-DST_DIR ?= dest
+DST_DIR ?= public
 NODE_MODULES ?= node_modules
 
 ifeq ($(VERBOSE),1)
@@ -26,7 +26,7 @@ DST_JS_FILES := $(SRC_TS_FILES:$(SRC_DIR)/ts/%.ts=$(DST_DIR)/js/%.js)
 SRC_SASS_FILES != find src/scss/ -regex '[^_]*.scss'
 DST_CSS_FILES := $(SRC_SASS_FILES:$(SRC_DIR)/scss/%.scss=$(DST_DIR)/css/%.css)
 
-# HTML files & injected dest HTML
+# HTML files & injected HTML
 SRC_HTML_FILES != find $(SRC_DIR) -name '*.html'
 DST_HTML_FILES := $(SRC_HTML_FILES:$(SRC_DIR)/%=$(DST_DIR)/%)
 
@@ -43,22 +43,22 @@ mkdir = $(MUTE)mkdir -p $(dir $@)
 all: node_modules $(DST_JS_FILES) $(DST_CSS_FILES) $(DST_HTML_FILES)
 
 clean:
-	rm -rf dest
+	rm -rf $(DST_DIR)
 
 watch:
 	$(shell $(watch) -a ./$(SRC_DIR) make)
 
-dest/js/%.js: src/ts/%.ts
+$(DST_DIR)/js/%.js: src/ts/%.ts
 	$(mkdir)
 	$(tsc) $< --out $@
 
-dest/css/%.css: src/scss/%.scss
+$(DST_DIR)/css/%.css: src/scss/%.scss
 	$(mkdir)
 	$(nodesass) $< $@
 
-dest/%.html: src/%.html
+$(DST_DIR)/%.html: src/%.html
 	$(mkdir)
-	$(postbuild) -i $< -o $@ -g dest -c dest/css -j dest/js
+	$(postbuild) -i $< -o $@ -g $(DST_DIR) -c $(DST_DIR)/css -j $(DST_DIR)/js
 
 install:
 ifndef NPM
