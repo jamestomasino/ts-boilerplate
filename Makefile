@@ -1,26 +1,34 @@
-.PHONY: all clean watch install
+WARNINGS := -Wall -Wextra
+CFLAGS ?= -std=gnu99 -g $(WARNINGS)
+
+# Overridable Config
+SRC_DIR ?= src
+DST_DIR ?= dest
+NODE_MODULES ?= node_modules
+
+ifeq ($(VERBOSE),1)
+  MUTE :=
+else
+  MUTE := @
+endif
 
 # Reference to node binaries without installing globally
-watch := node_modules/.bin/watchthis
-tsc := node_modules/.bin/tsc
-nodesass := node_modules/.bin/node-sass
-postbuild := node_modules/.bin/postbuild
+watch := $(NODE_MODULES)/.bin/watchthis
+tsc := $(NODE_MODULES)/.bin/tsc
+nodesass := $(NODE_MODULES)/.bin/node-sass
+postbuild := $(NODE_MODULES)/.bin/postbuild
 
 # Typescript source files & js transpiled files
-src_ts_files != find src/ts -name '*.ts'
-dest_js_files := $(src_ts_files:src/ts/%.ts=dest/js/%.js)
-#dest_js_files := $(patsubst %ts,%js,$(patsubst src/ts/%,dest/js/%,$(src_ts_files)))
+SRC_TS_FILES != find $(SRC_DIR)/ts -name '*.ts'
+DST_JS_FILES := $(SRC_TS_FILES:$(SRC_DIR)/ts/%.ts=$(DST_DIR)/js/%.js)
 
 # Sass source files & css transpiled files
-src_sass_files != find src/scss/ -regex '[^_]*.scss'
-dest_css_files := $(src_sass_files:src/scss/%.scss=dest/css/%.css)
-#dest_css_files := $(patsubst %scss,%css,$(patsubst src/scss/%,dest/css/%,$(src_sass_files)))
-
+SRC_SASS_FILES != find src/scss/ -regex '[^_]*.scss'
+DST_CSS_FILES := $(SRC_SASS_FILES:$(SRC_DIR)/scss/%.scss=$(DST_DIR)/css/%.css)
 
 # HTML files & injected dest HTML
-src_html_files != find src -name '*.html'
-dest_html_files := $(src_html_files:src/%=dest/%)
-#dest_html_files := $(patsubst src/%,dest/%,$(src_html_files))
+SRC_HTML_FILES != find $(SRC_DIR) -name '*.html'
+DST_HTML_FILES := $(SRC_HTML_FILES:$(SRC_DIR)/%=$(DST_DIR)/%)
 
 # Dependency checks
 NPM != command -v npm 2> /dev/null
@@ -28,15 +36,17 @@ YARN != command -v yarn 2> /dev/null
 
 # Macros
 copy = cp $< $@
-mkdir = @mkdir -p $(dir $@)
+mkdir = $(MUTE)mkdir -p $(dir $@)
 
-all: node_modules $(dest_js_files) $(dest_css_files) $(dest_html_files)
+.PHONY: all clean watch install
+
+all: node_modules $(DST_JS_FILES) $(DST_CSS_FILES) $(DST_HTML_FILES)
 
 clean:
 	rm -rf dest
 
 watch:
-	$(shell $(watch) -a ./src make)
+	$(shell $(watch) -a ./$(SRC_DIR) make)
 
 dest/js/%.js: src/ts/%.ts
 	$(mkdir)
@@ -60,4 +70,5 @@ endif
 
 node_modules: package.json yarn.lock
 	yarn install
-	touch node_modules # fixes watch bug if you manually ran yarn
+	touch $(NODE_MODULES) # fixes watch bug if you manually ran yarn
+
