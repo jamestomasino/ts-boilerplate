@@ -1,6 +1,3 @@
-WARNINGS := -Wall -Wextra
-CFLAGS ?= -std=gnu99 -g $(WARNINGS)
-
 # Overridable Config
 SRC_DIR ?= src
 DST_DIR ?= public
