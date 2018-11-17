@@ -13,7 +13,6 @@ endif
 watch := $(NODE_MODULES)/.bin/watchthis
 tsc := $(NODE_MODULES)/.bin/tsc
 nodesass := $(NODE_MODULES)/.bin/node-sass
-postbuild := $(NODE_MODULES)/.bin/postbuild
 
 # Typescript source files & js transpiled files
 SRC_TS_FILES != find $(SRC_DIR)/ts -name '*.ts'
@@ -46,15 +45,15 @@ watch:
 
 $(DST_DIR)/js/%.js: $(SRC_DIR)/ts/%.ts
 	$(mkdir)
-	$(tsc) $< --out $@
+	$(tsc) $< --outFile $@
 
 $(DST_DIR)/css/%.css: $(SRC_DIR)/scss/%.scss
 	$(mkdir)
-	$(nodesass) $< $@
+	$(nodesass) --output-style compressed $< $@
 
 $(DST_DIR)/%.html: $(SRC_DIR)/%.html
 	$(mkdir)
-	$(postbuild) -i $< -o $@ -g $(DST_DIR) -c $(DST_DIR)/css -j $(DST_DIR)/js
+	cp $< $@
 
 install:
 ifndef YARN

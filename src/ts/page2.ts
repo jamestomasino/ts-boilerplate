@@ -4,7 +4,5 @@ class Example {
         console.log(this.name + " danced " + speed);
     }
 }
-
-var bjorn: Example = new Example("Bjorn the bear")
-
+var bjorn:Example = new Example("Bjorn the bear")
 bjorn.dance("fast")
