@@ -28,7 +28,6 @@ SRC_HTML_FILES != find $(SRC_DIR) -name '*.html'
 DST_HTML_FILES := $(SRC_HTML_FILES:$(SRC_DIR)/%=$(DST_DIR)/%)
 
 # Dependency checks
-NPM != command -v npm 2> /dev/null
 YARN != command -v yarn 2> /dev/null
 
 # Macros
@@ -58,9 +57,6 @@ $(DST_DIR)/%.html: $(SRC_DIR)/%.html
 	$(postbuild) -i $< -o $@ -g $(DST_DIR) -c $(DST_DIR)/css -j $(DST_DIR)/js
 
 install:
-ifndef NPM
-	$(error Missing dependency 'npm'. Please install and try again.)
-endif
 ifndef YARN
 	$(error Missing dependency 'yarn'. Please install and try again.)
 endif
